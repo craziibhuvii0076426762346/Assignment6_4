@@ -1,0 +1,72 @@
+Assignment 6_4
+
+1.Write a pig script find the average age of male and female persons died in the titanic tragedy
+
+Solution:
+
+
+dataset = load '/user/titanicdata' using PigStorage(',') as (pid:int, sid:int, pclass:int, name:chararray, sex:chararray, age:int, sibsp:int, parch:int, ticket:chararray, fare:chararray, cabin:chararray, embarked:chararray);
+
+
+Dead = filter dataset by sid == 1;
+
+
+male = filter Dead by sex == 'male';
+
+
+female = filter Dead by sex == 'female';
+
+
+malegroup = group male all;
+
+
+femalegroup = group female all;
+
+
+avgmale = foreach malegroup generate AVG(male.age);
+
+
+avgfemale = foreach femalegroup generate AVG(female.age);
+
+
+dump avgmale;
+
+
+dump avgfemale;
+
+
+
+--------------------------------------------------------------------------
+
+
+
+2.Write a pig script to find the number of people died and survived in each 
+class
+
+Solution:
+
+dataset = load '/user/titanicdata' using PigStorage(',') as(pid:int, sid:int, pclass:int, name:chararray, sex:chararray, age:int, sibsp:int, parch:int, ticket:chararray, fare:chararray, cabin:chararray, embarked:chararray);
+
+
+Dead = filter dataset by sid == 1;
+
+
+Survived = filter dataset by sid == 0;
+
+
+GroupingDead = group Dead by pclass;
+
+
+GroupingSurvived = group Survived by pclass;
+
+
+Totaldead = foreach GroupingDead generate COUNT(Dead);
+
+
+Totalsurvived = foreach GroupingSurvived generate COUNT(Survived);
+
+
+dump Totaldead;
+
+
+dump Totalsurvived;
